@@ -192,13 +192,13 @@ void mainScreen(int choice){              //Ausgeben der Sensordaten aus OLED (I
 void checkSettings(){                                         //Auswertung Sensorwerte und Einstellungen für die Tag- /Nachtzeit & Relais schalten
   if(getMode() == "Tag"){
     digitalWrite(A3, HIGH);
-    if(readSensor(1) - tolTemp < dayTemp ){
+    if(readSensor(1) < dayTemp - tolTemp ){
       digitalWrite(A1, HIGH);
     }
     else if (readSensor(1) >= dayTemp){
       digitalWrite(A1, LOW);
     }
-    if(readSensor(2) - tolHum < dayHum){
+    if(readSensor(2) < dayHum - tolHum){
       digitalWrite(A2, HIGH);
     }
     else if (readSensor(2) >= dayHum){
@@ -207,13 +207,13 @@ void checkSettings(){                                         //Auswertung Senso
   }
   else if(getMode() == "Nacht"){                
     digitalWrite(A3, LOW);
-    if(readSensor(1) - tolTemp < nightTemp){
+    if(readSensor(1) < nightTemp - tolTemp){
       digitalWrite(A1, HIGH);
     }
     else if (readSensor(1) >= nightTemp){
       digitalWrite(A1, LOW);
     }
-    if(readSensor(2) - tolHum < nightHum){
+    if(readSensor(2) < nightHum - tolHum){
       digitalWrite(A2, HIGH);
     }
     else if (readSensor(2) >= nightHum){
