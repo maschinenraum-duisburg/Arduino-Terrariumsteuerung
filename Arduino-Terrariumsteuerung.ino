@@ -43,11 +43,11 @@ int nightTime[2] = {19,00};
 
 float dayTemp = 32.0;                                 //Standardwerte für Temperatur Tag/Nacht
 float nightTemp = 25.0;
-float tempTolerance = 2;                              //toleranz für Temperatur
+int tolTemp = 1;
 
 float dayHum = 65.0;                                  //Standardwerte für Feuchtigkeit Tag/Nacht
 float nightHum = 80.0;
-float humTolerance = 8;                               //toleranz für Feuchtigkeit
+int  tolHum = 5;
 
 bool light = 0;                                       //Variablen für Steuerung der Relais
 bool heat = 0;                                        
@@ -189,65 +189,37 @@ void mainScreen(int choice){              //Ausgeben der Sensordaten aus OLED (I
       break;
   }
 }
-void setValues(){                                         //Schalten der Relais
-  if(light == 1)
-  {
-    digitalWrite(A3, HIGH);
-  }
-  else
-  {
-    digitalWrite(A3, LOW);
-  }
-  if(humidity == 1)
-  {
-    digitalWrite(A2, HIGH);
-  }
-  else
-  {
-    digitalWrite(A2, LOW);
-  }
-  if(heat == 1)
-  {
-    digitalWrite(A1, HIGH);
-  }
-  else
-  {
-    digitalWrite(A1, LOW);
-  }
-}
-
-void checkSettings(){                                         //Auswertung Sensorwerte und Einstellungen für die Tag- /Nachtzeit & setzen der Werte für die Relais-Steuerung
+void checkSettings(){                                         //Auswertung Sensorwerte und Einstellungen für die Tag- /Nachtzeit & Relais schalten
   if(getMode() == "Tag"){
-    light = 1;
-    if(readSensor(1) - tempTolerance < dayTemp ){
-      heat = 1;
+    digitalWrite(A3, HIGH);
+    if(readSensor(1) - tolTemp < dayTemp ){
+      digitalWrite(A1, HIGH);
     }
     else if (readSensor(1) >= dayTemp){
-      heat = 0;
+      digitalWrite(A1, LOW);
     }
-    if(readSensor(2) - humTolerance < dayHum){
-      humidity = 1;
+    if(readSensor(2) - tolHum < dayHum){
+      digitalWrite(A2, HIGH);
     }
     else if (readSensor(2) >= dayHum){
-      humidity = 0;
+      digitalWrite(A2, LOW);
     }
   }
   else if(getMode() == "Nacht"){                
-    light = 0;
-    if(readSensor(1) - tempTolerance < nightTemp){
-      heat = 1;
+    digitalWrite(A3, LOW);
+    if(readSensor(1) - tolTemp < nightTemp){
+      digitalWrite(A1, HIGH);
     }
     else if (readSensor(1) >= nightTemp){
-      heat = 0;
+      digitalWrite(A1, LOW);
     }
-    if(readSensor(2) - tempTolerance < nightHum){
-      humidity = 1;
+    if(readSensor(2) - tolHum < nightHum){
+      digitalWrite(A2, HIGH);
     }
     else if (readSensor(2) >= nightHum){
-      humidity = 0;
+      digitalWrite(A2, LOW);
     }
   }
-  setValues();
 }
 
 int getButton(int PR) {                                           //Tasterdruckabfrage mit Entprellung PR = 0 für Release und 1 für Druck
